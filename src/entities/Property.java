@@ -58,9 +58,9 @@ public class Property implements Serializable {
     @Column(name = "ID")
     private BigDecimal id;
     @ManyToMany(mappedBy = "propertyCollection")
-    private Collection<Client> clientCollection;
+    private transient Collection<Client> clientCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "propertyId")
-    private Collection<RentRecord> rentRecordCollection;
+    private transient Collection<RentRecord> rentRecordCollection;
     @JoinColumn(name = "CLIENT_ID", referencedColumnName = "ID")
     @ManyToOne
     private Client clientId;

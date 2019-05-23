@@ -38,7 +38,7 @@ public class Client implements Serializable {
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @Column(name = "PASSWORD")
-    private String password;
+    private transient String password;
     @Basic(optional = false)
     @Column(name = "USERNAME")
     private String username;
@@ -56,9 +56,9 @@ public class Client implements Serializable {
         @JoinColumn(name = "CLIENT_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "PROPERTY_ID", referencedColumnName = "ID")})
     @ManyToMany
-    private Collection<Property> propertyCollection;
+    private transient Collection<Property> propertyCollection;
     @OneToMany(mappedBy = "clientId")
-    private Collection<Property> propertyCollection1;
+    private transient Collection<Property> propertyCollection1;
 
     public Client() {
     }

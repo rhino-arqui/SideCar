@@ -51,7 +51,7 @@ public class RentRecord implements Serializable {
     @ManyToOne(optional = false)
     private Property propertyId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rentRecordId")
-    private Collection<LogPayments> logPaymentsCollection;
+    private transient Collection<LogPayments> logPaymentsCollection;
 
     public RentRecord() {
     }

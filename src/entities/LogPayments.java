@@ -40,7 +40,7 @@ public class LogPayments implements Serializable {
     private BigDecimal rentValue;
     @JoinColumn(name = "RENT_RECORD_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private RentRecord rentRecordId;
+    private transient RentRecord rentRecordId;
 
     public LogPayments() {
     }
