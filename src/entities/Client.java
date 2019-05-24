@@ -8,6 +8,7 @@ package entities;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,6 +19,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -27,13 +29,15 @@ import javax.persistence.Table;
 @Table(name = "CLIENT")
 @NamedQueries({
     @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c")
-    , @NamedQuery(name = "Client.findByPassword", query = "SELECT c FROM Client c WHERE c.password = :password")
     , @NamedQuery(name = "Client.findByUsername", query = "SELECT c FROM Client c WHERE c.username = :username")
     , @NamedQuery(name = "Client.findByGivenName", query = "SELECT c FROM Client c WHERE c.givenName = :givenName")
     , @NamedQuery(name = "Client.findByLastName", query = "SELECT c FROM Client c WHERE c.lastName = :lastName")
     , @NamedQuery(name = "Client.findByEmail", query = "SELECT c FROM Client c WHERE c.email = :email")
     , @NamedQuery(name = "Client.findById", query = "SELECT c FROM Client c WHERE c.id = :id")})
 public class Client implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
+    private transient Collection<RentRecord> rentRecordCollection;
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
@@ -160,6 +164,15 @@ public class Client implements Serializable {
     @Override
     public String toString() {
         return "entities.Client[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public Collection<RentRecord> getRentRecordCollection() {
+        return rentRecordCollection;
+    }
+
+    public void setRentRecordCollection(Collection<RentRecord> rentRecordCollection) {
+        this.rentRecordCollection = rentRecordCollection;
     }
     
 }

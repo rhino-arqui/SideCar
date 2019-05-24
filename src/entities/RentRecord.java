@@ -22,19 +22,35 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author johan-smc
+ * @author root
  */
 @Entity
 @Table(name = "RENT_RECORD")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "RentRecord.findAll", query = "SELECT r FROM RentRecord r")
     , @NamedQuery(name = "RentRecord.findById", query = "SELECT r FROM RentRecord r WHERE r.id = :id")
     , @NamedQuery(name = "RentRecord.findByLeasePath", query = "SELECT r FROM RentRecord r WHERE r.leasePath = :leasePath")
     , @NamedQuery(name = "RentRecord.findByRentalDate", query = "SELECT r FROM RentRecord r WHERE r.rentalDate = :rentalDate")})
 public class RentRecord implements Serializable {
+
+    @Column(name = "CONFIRMED_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date confirmedDate;
+
+    @JoinColumn(name = "CLIENT_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Client clientId;
+    @JoinColumn(name = "PROPERTY_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Property propertyId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rentRecordId")
+    private transient Collection<LogPayments> logPaymentsCollection;
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -47,11 +63,6 @@ public class RentRecord implements Serializable {
     @Column(name = "RENTAL_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date rentalDate;
-    @JoinColumn(name = "PROPERTY_ID", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
-    private Property propertyId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rentRecordId")
-    private transient Collection<LogPayments> logPaymentsCollection;
 
     public RentRecord() {
     }
@@ -84,22 +95,6 @@ public class RentRecord implements Serializable {
         this.rentalDate = rentalDate;
     }
 
-    public Property getPropertyId() {
-        return propertyId;
-    }
-
-    public void setPropertyId(Property propertyId) {
-        this.propertyId = propertyId;
-    }
-
-    public Collection<LogPayments> getLogPaymentsCollection() {
-        return logPaymentsCollection;
-    }
-
-    public void setLogPaymentsCollection(Collection<LogPayments> logPaymentsCollection) {
-        this.logPaymentsCollection = logPaymentsCollection;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -123,6 +118,39 @@ public class RentRecord implements Serializable {
     @Override
     public String toString() {
         return "entities.RentRecord[ id=" + id + " ]";
+    }
+
+    public Client getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Client clientId) {
+        this.clientId = clientId;
+    }
+
+    public Property getPropertyId() {
+        return propertyId;
+    }
+
+    public void setPropertyId(Property propertyId) {
+        this.propertyId = propertyId;
+    }
+
+    @XmlTransient
+    public Collection<LogPayments> getLogPaymentsCollection() {
+        return logPaymentsCollection;
+    }
+
+    public void setLogPaymentsCollection(Collection<LogPayments> logPaymentsCollection) {
+        this.logPaymentsCollection = logPaymentsCollection;
+    }
+
+    public Date getConfirmedDate() {
+        return confirmedDate;
+    }
+
+    public void setConfirmedDate(Date confirmedDate) {
+        this.confirmedDate = confirmedDate;
     }
     
 }
