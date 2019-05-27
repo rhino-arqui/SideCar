@@ -60,7 +60,7 @@ public class RentRecord implements Serializable {
     private BigDecimal id;
     @Column(name = "LEASE_PATH")
     private String leasePath;
-    @Column(name = "RENTAL_DATE")
+    @Column(name = "RENTAL_DATE", insertable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date rentalDate;
 
