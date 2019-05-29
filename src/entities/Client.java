@@ -6,29 +6,25 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author johan-smc
+ * @author JuanPablo
  */
 @Entity
 @Table(name = "CLIENT")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c")
+    , @NamedQuery(name = "Client.findByPassword", query = "SELECT c FROM Client c WHERE c.password = :password")
     , @NamedQuery(name = "Client.findByUsername", query = "SELECT c FROM Client c WHERE c.username = :username")
     , @NamedQuery(name = "Client.findByGivenName", query = "SELECT c FROM Client c WHERE c.givenName = :givenName")
     , @NamedQuery(name = "Client.findByLastName", query = "SELECT c FROM Client c WHERE c.lastName = :lastName")
@@ -36,13 +32,10 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Client.findById", query = "SELECT c FROM Client c WHERE c.id = :id")})
 public class Client implements Serializable {
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
-    private transient Collection<RentRecord> rentRecordCollection;
-
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @Column(name = "PASSWORD")
-    private transient String password;
+    private String password;
     @Basic(optional = false)
     @Column(name = "USERNAME")
     private String username;
@@ -56,13 +49,6 @@ public class Client implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private String id;
-    @JoinTable(name = "VISITING_LIST", joinColumns = {
-        @JoinColumn(name = "CLIENT_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "PROPERTY_ID", referencedColumnName = "ID")})
-    @ManyToMany
-    private transient Collection<Property> propertyCollection;
-    @OneToMany(mappedBy = "clientId")
-    private transient Collection<Property> propertyCollection1;
 
     public Client() {
     }
@@ -125,22 +111,6 @@ public class Client implements Serializable {
         this.id = id;
     }
 
-    public Collection<Property> getPropertyCollection() {
-        return propertyCollection;
-    }
-
-    public void setPropertyCollection(Collection<Property> propertyCollection) {
-        this.propertyCollection = propertyCollection;
-    }
-
-    public Collection<Property> getPropertyCollection1() {
-        return propertyCollection1;
-    }
-
-    public void setPropertyCollection1(Collection<Property> propertyCollection1) {
-        this.propertyCollection1 = propertyCollection1;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -164,15 +134,6 @@ public class Client implements Serializable {
     @Override
     public String toString() {
         return "entities.Client[ id=" + id + " ]";
-    }
-
-    @XmlTransient
-    public Collection<RentRecord> getRentRecordCollection() {
-        return rentRecordCollection;
-    }
-
-    public void setRentRecordCollection(Collection<RentRecord> rentRecordCollection) {
-        this.rentRecordCollection = rentRecordCollection;
     }
     
 }
